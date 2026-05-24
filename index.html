@@ -6,7 +6,10 @@
 <title>Containment Unit 13</title>
 
 <style>
-*{box-sizing:border-box}
+
+*{
+  box-sizing:border-box
+}
 
 body{
   margin:0;
@@ -57,6 +60,19 @@ header img{
 
 .main{
   padding:22px;
+}
+
+.search-box{
+  width:100%;
+  background:#111;
+  color:#39ff14;
+  border:1px solid #333;
+  padding:14px;
+  margin-bottom:22px;
+  border-radius:10px;
+  font-size:1rem;
+  font-family:monospace;
+  box-shadow:0 0 12px rgba(57,255,20,.05);
 }
 
 .add-unit,
@@ -168,6 +184,7 @@ button:hover{
   font-size:.9rem;
   letter-spacing:4px;
 }
+
 </style>
 </head>
 
@@ -181,29 +198,37 @@ button:hover{
 
 <div class="main">
 
-  <div class="add-unit">
+<input
+  type="text"
+  id="searchBox"
+  class="search-box"
+  placeholder="Search containment database..."
+  onkeyup="renderUnits()"
+>
 
-    <h2>Create New Unit</h2>
+<div class="add-unit">
 
-    <input
-      type="text"
-      id="unitName"
-      placeholder="Custom Unit Name"
-    >
+<h2>Create New Unit</h2>
 
-    <textarea
-      id="unitItems"
-      rows="6"
-      placeholder="Enter items... one per line"
-    ></textarea>
+<input
+  type="text"
+  id="unitName"
+  placeholder="Custom Unit Name"
+>
 
-    <button onclick="addUnit()">
-      Create Containment Unit
-    </button>
+<textarea
+  id="unitItems"
+  rows="6"
+  placeholder="Enter items... one per line"
+></textarea>
 
-  </div>
+<button onclick="addUnit()">
+  Create Containment Unit
+</button>
 
-  <div id="units"></div>
+</div>
+
+<div id="units"></div>
 
 </div>
 
@@ -292,13 +317,38 @@ function renderUnits(){
   const container =
     document.getElementById("units");
 
+  const search =
+    document
+      .getElementById("searchBox")
+      ?.value
+      .toLowerCase()
+      .trim() || "";
+
   container.innerHTML = "";
 
   units.forEach((unit, unitIndex)=>{
 
     let itemsHTML = "";
 
+    let matchingItems = 0;
+
     unit.items.forEach((item, itemIndex)=>{
+
+      const itemLower =
+        item.toLowerCase();
+
+      const unitLower =
+        unit.name.toLowerCase();
+
+      if(
+        search &&
+        !itemLower.includes(search) &&
+        !unitLower.includes(search)
+      ){
+        return;
+      }
+
+      matchingItems++;
 
       itemsHTML += `
 
@@ -322,6 +372,14 @@ function renderUnits(){
       `;
 
     });
+
+    if(
+      search &&
+      matchingItems === 0 &&
+      !unit.name.toLowerCase().includes(search)
+    ){
+      return;
+    }
 
     container.innerHTML += `
 
@@ -350,7 +408,7 @@ function renderUnits(){
 
         </div>
 
-        ${itemsHTML || '<p class="empty">No items contained.</p>'}
+        ${itemsHTML || '<p class="empty">No matching items.</p>'}
 
       </div>
 
