@@ -44,14 +44,18 @@ header img{
   font-size:1.05rem;
 }
 
-.cursor{animation:blink .7s infinite}
+.cursor{
+  animation:blink .7s infinite;
+}
 
 @keyframes blink{
   0%,50%{opacity:1}
   51%,100%{opacity:0}
 }
 
-.main{padding:22px}
+.main{
+  padding:22px;
+}
 
 .add-unit,.unit{
   background:#0b0b0b;
@@ -79,7 +83,9 @@ input,textarea{
   font-size:1rem;
 }
 
-textarea{resize:vertical}
+textarea{
+  resize:vertical;
+}
 
 input:focus,textarea:focus{
   outline:none;
@@ -117,9 +123,13 @@ button:hover{
   margin-top:0;
 }
 
-.edit-btn{background:#333}
-.add-btn{background:#004b22}
-.delete-btn{background:#400}
+.edit-btn{
+  background:#333;
+}
+
+.delete-btn{
+  background:#400;
+}
 
 .item{
   padding:12px;
@@ -159,13 +169,25 @@ button:hover{
 <div class="main">
 
   <div class="add-unit">
+
     <h2>Create New Unit</h2>
 
-    <input type="text" id="unitName" placeholder="Custom Unit Name">
+    <input
+      type="text"
+      id="unitName"
+      placeholder="Custom Unit Name"
+    >
 
-    <textarea id="unitItems" rows="6" placeholder="Enter items... one per line"></textarea>
+    <textarea
+      id="unitItems"
+      rows="6"
+      placeholder="Enter items... one per line"
+    ></textarea>
 
-    <button onclick="addUnit()">Create Containment Unit</button>
+    <button onclick="addUnit()">
+      Create Containment Unit
+    </button>
+
   </div>
 
   <div id="units"></div>
@@ -177,173 +199,289 @@ CONTAINMENT DATABASE ACTIVE
 </div>
 
 <script>
-let units = JSON.parse(localStorage.getItem("containmentUnits")) || [];
+
+let units =
+  JSON.parse(
+    localStorage.getItem("containmentUnits")
+  ) || [];
 
 const bootMessages = [
+
   "INITIALIZING CONTAINMENT DATABASE",
   "SCANNING UNIT INVENTORY",
   "VERIFYING AUTHORIZATION",
   "CHECKING BREACH HISTORY",
   "PURGE PROTOCOL STANDBY",
   "ACCESS CLEAR"
+
 ];
 
-const systemLog = document.getElementById("systemLog");
+const systemLog =
+  document.getElementById("systemLog");
 
 async function bootSequence(){
+
   systemLog.innerHTML = "";
 
   for(const msg of bootMessages){
-    const line = document.createElement("div");
+
+    const line =
+      document.createElement("div");
+
     systemLog.appendChild(line);
 
     for(let dots = 1; dots <= 3; dots++){
-      line.innerHTML = msg + ".".repeat(dots) + '<span class="cursor">█</span>';
+
+      line.innerHTML =
+        msg +
+        ".".repeat(dots) +
+        '<span class="cursor">█</span>';
+
       await wait(420);
+
     }
 
     line.innerHTML = msg + "...";
+
     await wait(260);
+
   }
 
-  const finalLine = document.createElement("div");
-  finalLine.innerHTML = '<br>SECURITY STATUS: <span style="color:#ff3333;">ARMED</span>';
+  const finalLine =
+    document.createElement("div");
+
+  finalLine.innerHTML =
+    '<br>SECURITY STATUS: <span style="color:#ff3333;">ARMED</span>';
+
   systemLog.appendChild(finalLine);
+
 }
 
 function wait(ms){
-  return new Promise(resolve => setTimeout(resolve, ms));
+
+  return new Promise(resolve =>
+    setTimeout(resolve, ms)
+  );
+
 }
 
 function saveUnits(){
-  localStorage.setItem("containmentUnits", JSON.stringify(units));
+
+  localStorage.setItem(
+    "containmentUnits",
+    JSON.stringify(units)
+  );
+
 }
 
 function renderUnits(){
-  const container = document.getElementById("units");
+
+  const container =
+    document.getElementById("units");
+
   container.innerHTML = "";
 
   units.forEach((unit, unitIndex)=>{
+
     let itemsHTML = "";
 
     unit.items.forEach((item, itemIndex)=>{
+
       itemsHTML += `
+
         <div class="item">
+
           <span>${item}</span>
 
           <div class="item-buttons">
-            <button class="small-btn edit-btn" onclick="editItem(${unitIndex}, ${itemIndex})">EDIT</button>
-            <button class="small-btn delete-btn" onclick="deleteItem(${unitIndex}, ${itemIndex})">REMOVE</button>
+
+            <button
+              class="small-btn edit-btn"
+              onclick="editItem(${unitIndex}, ${itemIndex})"
+            >
+              EDIT
+            </button>
+
+            <button
+              class="small-btn delete-btn"
+              onclick="deleteItem(${unitIndex}, ${itemIndex})"
+            >
+              REMOVE
+            </button>
+
           </div>
+
         </div>
+
       `;
+
     });
 
     container.innerHTML += `
+
       <div class="unit">
-        <h3>Unit ${unitIndex + 1} — ${unit.name}</h3>
+
+        <h3>
+          Unit ${unitIndex + 1}
+          — ${unit.name}
+        </h3>
 
         <div class="unit-actions">
-          <button class="small-btn edit-btn" onclick="editUnitName(${unitIndex})">EDIT UNIT</button>
-          <button class="small-btn add-btn" onclick="addItemsToUnit(${unitIndex})">ADD ITEMS</button>
-          <button class="small-btn delete-btn" onclick="deleteUnit(${unitIndex})">DELETE UNIT</button>
+
+          <button
+            class="small-btn edit-btn"
+            onclick="editUnitName(${unitIndex})"
+          >
+            EDIT UNIT
+          </button>
+
+          <button
+            class="small-btn delete-btn"
+            onclick="deleteUnit(${unitIndex})"
+          >
+            DELETE UNIT
+          </button>
+
         </div>
 
         ${itemsHTML || '<p class="empty">No items contained.</p>'}
+
       </div>
+
     `;
+
   });
+
 }
 
 function addUnit(){
-  const name = document.getElementById("unitName").value.trim();
-  const rawItems = document.getElementById("unitItems").value.trim();
+
+  const name =
+    document.getElementById("unitName")
+    .value
+    .trim();
+
+  const rawItems =
+    document.getElementById("unitItems")
+    .value
+    .trim();
 
   if(!name){
+
     alert("Containment unit name required.");
+
     return;
+
   }
 
   const items = rawItems
-    ? rawItems.split("\n").map(i => i.trim()).filter(i => i)
+    ? rawItems
+        .split("\n")
+        .map(i => i.trim())
+        .filter(i => i)
     : [];
 
-  units.push({ name, items });
+  units.push({
+
+    name,
+    items
+
+  });
 
   saveUnits();
+
   renderUnits();
 
   document.getElementById("unitName").value = "";
   document.getElementById("unitItems").value = "";
+
 }
 
 function editUnitName(unitIndex){
-  const updatedName = prompt("Edit unit name:", units[unitIndex].name);
+
+  const updatedName =
+    prompt(
+      "Edit unit name:",
+      units[unitIndex].name
+    );
 
   if(updatedName === null) return;
+
   if(updatedName.trim() === "") return;
 
-  units[unitIndex].name = updatedName.trim();
+  units[unitIndex].name =
+    updatedName.trim();
 
   saveUnits();
+
   renderUnits();
-}
 
-function addItemsToUnit(unitIndex){
-  const newItems = prompt("Add items to this unit. Put each item on a new line:");
-
-  if(newItems === null) return;
-
-  const items = newItems
-    .split("\n")
-    .map(i => i.trim())
-    .filter(i => i);
-
-  if(items.length === 0) return;
-
-  units[unitIndex].items.push(...items);
-
-  saveUnits();
-  renderUnits();
 }
 
 function editItem(unitIndex, itemIndex){
-  const currentItem = units[unitIndex].items[itemIndex];
-  const updatedItem = prompt("Edit item:", currentItem);
+
+  const currentItem =
+    units[unitIndex].items[itemIndex];
+
+  const updatedItem =
+    prompt(
+      "Edit item:",
+      currentItem
+    );
 
   if(updatedItem === null) return;
+
   if(updatedItem.trim() === "") return;
 
-  units[unitIndex].items[itemIndex] = updatedItem.trim();
+  units[unitIndex].items[itemIndex] =
+    updatedItem.trim();
 
   saveUnits();
+
   renderUnits();
+
 }
 
 function deleteItem(unitIndex, itemIndex){
-  const confirmDelete = confirm("Remove this item from containment?");
+
+  const confirmDelete =
+    confirm(
+      "Remove this item from containment?"
+    );
 
   if(!confirmDelete) return;
 
-  units[unitIndex].items.splice(itemIndex, 1);
+  units[unitIndex]
+    .items
+    .splice(itemIndex, 1);
 
   saveUnits();
+
   renderUnits();
+
 }
 
 function deleteUnit(unitIndex){
-  const confirmDelete = confirm("WARNING: Delete this entire containment unit and all items inside it?");
+
+  const confirmDelete =
+    confirm(
+      "WARNING: Delete this entire containment unit and all items inside it?"
+    );
 
   if(!confirmDelete) return;
 
   units.splice(unitIndex, 1);
 
   saveUnits();
+
   renderUnits();
+
 }
 
 bootSequence();
+
 renderUnits();
+
 </script>
 
 </body>
