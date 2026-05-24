@@ -6,7 +6,10 @@
 <title>Containment Unit 13</title>
 
 <style>
-*{box-sizing:border-box}
+
+*{
+  box-sizing:border-box;
+}
 
 body{
   margin:0;
@@ -17,6 +20,7 @@ body{
 
 header{
   position:relative;
+  overflow:hidden;
 }
 
 header img{
@@ -28,37 +32,41 @@ header img{
 
 .overlay{
   position:absolute;
-  bottom:18px;
-  left:18px;
-  background:rgba(0,0,0,.7);
-  padding:14px 18px;
+  bottom:20px;
+  left:20px;
+  background:rgba(0,0,0,.72);
+  padding:14px 20px;
   border:1px solid #700;
-  box-shadow:0 0 14px rgba(255,0,0,.45);
+  box-shadow:0 0 18px rgba(255,0,0,.4);
+  backdrop-filter:blur(2px);
 }
 
 .overlay h1{
   margin:0;
   color:#ff2e2e;
   font-size:2rem;
-  text-shadow:0 0 12px red;
+  text-shadow:0 0 14px red;
 }
 
 .overlay p{
-  margin:6px 0 0;
+  margin:8px 0 0;
   color:#bbb;
-  font-size:.95rem;
+  font-size:1rem;
 }
 
 .system-log{
-  background:#080808;
+  background:#050505;
   color:#39ff14;
-  padding:14px;
+  padding:18px;
   font-family:monospace;
   border-top:1px solid #222;
   border-bottom:1px solid #222;
-  min-height:120px;
-  line-height:1.5;
-  box-shadow:inset 0 0 20px rgba(57,255,20,.08);
+  min-height:140px;
+  line-height:1.55;
+  box-shadow:
+    inset 0 0 25px rgba(57,255,20,.06),
+    0 0 20px rgba(255,0,0,.08);
+  font-size:1.05rem;
 }
 
 .cursor{
@@ -71,99 +79,156 @@ header img{
 }
 
 .main{
-  padding:20px;
+  padding:22px;
 }
 
-.add-unit,.unit{
-  background:#111;
-  border:1px solid #333;
-  padding:20px;
-  margin-bottom:20px;
-  border-radius:10px;
-  box-shadow:0 0 18px rgba(255,0,0,.08);
+.add-unit,
+.unit{
+  background:#0b0b0b;
+  border:1px solid #2a2a2a;
+  border-radius:14px;
+  padding:24px;
+  margin-bottom:24px;
+  box-shadow:
+    0 0 18px rgba(255,0,0,.08),
+    inset 0 0 14px rgba(255,255,255,.02);
 }
 
-h2,h3{
-  color:#ff3a3a;
+.add-unit h2,
+.unit h3{
   margin-top:0;
+  color:#ff3a3a;
+  text-shadow:0 0 8px rgba(255,0,0,.5);
 }
 
-input,textarea{
+input,
+textarea{
   width:100%;
-  background:#1a1a1a;
+  background:#151515;
   color:white;
-  border:1px solid #444;
-  padding:12px;
-  margin-top:10px;
-  border-radius:6px;
+  border:1px solid #3a3a3a;
+  padding:14px;
+  margin-top:12px;
+  border-radius:8px;
   font-size:1rem;
+}
+
+textarea{
+  resize:vertical;
+}
+
+input:focus,
+textarea:focus{
+  outline:none;
+  border-color:#a00000;
+  box-shadow:0 0 10px rgba(255,0,0,.25);
 }
 
 button{
-  margin-top:12px;
+  margin-top:14px;
   background:#8b0000;
   color:white;
   border:none;
-  padding:12px 18px;
+  padding:14px 18px;
   font-size:1rem;
-  border-radius:6px;
+  border-radius:8px;
   cursor:pointer;
+  transition:.2s;
 }
 
 button:hover{
   background:#b30000;
+  transform:scale(1.02);
 }
 
 .item{
-  padding:10px;
-  margin-bottom:10px;
-  background:#1a1a1a;
+  padding:12px;
+  margin-bottom:12px;
+  background:#141414;
   border-left:4px solid #8b0000;
   display:flex;
   justify-content:space-between;
   align-items:center;
-  gap:10px;
+  gap:12px;
+  border-radius:6px;
 }
 
 .delete-btn{
   background:#400;
-  padding:6px 10px;
-  font-size:.8rem;
+  padding:8px 12px;
+  font-size:.82rem;
 }
 
 .footer-warning{
   text-align:center;
-  padding:30px 15px;
+  padding:34px 15px;
   color:#700;
-  font-size:.85rem;
-  letter-spacing:2px;
+  font-size:.9rem;
+  letter-spacing:4px;
 }
+
+@media(max-width:700px){
+
+  .overlay{
+    left:10px;
+    right:10px;
+    bottom:10px;
+    padding:12px;
+  }
+
+  .overlay h1{
+    font-size:1.7rem;
+  }
+
+  .overlay p{
+    font-size:.92rem;
+  }
+
+}
+
 </style>
 </head>
 
 <body>
 
 <header>
-  <img src="/publicimages/containment-unit-13.png" alt="Containment Unit 13 Banner">
 
-  <div class="overlay">
-    <h1>Containment Unit 13</h1>
-    <p>Unauthorized access will be terminated.</p>
-  </div>
+<img src="/publicimages/containment-unit-13.png" alt="Containment Unit 13 Banner">
+
+<div class="overlay">
+  <h1>Containment Unit 13</h1>
+  <p>Unauthorized access will be terminated.</p>
+</div>
+
 </header>
 
 <div class="system-log" id="systemLog"></div>
 
 <div class="main">
 
-  <div class="add-unit">
-    <h2>Create New Unit</h2>
-    <input type="text" id="unitName" placeholder="Custom Unit Name">
-    <textarea id="unitItems" rows="6" placeholder="Enter items... one per line"></textarea>
-    <button onclick="addUnit()">Create Containment Unit</button>
-  </div>
+<div class="add-unit">
 
-  <div id="units"></div>
+<h2>Create New Unit</h2>
+
+<input
+  type="text"
+  id="unitName"
+  placeholder="Custom Unit Name"
+>
+
+<textarea
+  id="unitItems"
+  rows="6"
+  placeholder="Enter items... one per line"
+></textarea>
+
+<button onclick="addUnit()">
+  Create Containment Unit
+</button>
+
+</div>
+
+<div id="units"></div>
 
 </div>
 
@@ -172,80 +237,150 @@ CONTAINMENT DATABASE ACTIVE
 </div>
 
 <script>
-let units = JSON.parse(localStorage.getItem("containmentUnits")) || [];
+
+let units =
+  JSON.parse(
+    localStorage.getItem("containmentUnits")
+  ) || [];
 
 const bootMessages = [
+
   "INITIALIZING CONTAINMENT DATABASE",
   "SCANNING UNIT INVENTORY",
   "VERIFYING AUTHORIZATION",
   "CHECKING BREACH HISTORY",
   "PURGE PROTOCOL STANDBY",
   "ACCESS CLEAR"
+
 ];
 
-const systemLog = document.getElementById("systemLog");
+const systemLog =
+  document.getElementById("systemLog");
 
 async function bootSequence(){
+
   systemLog.innerHTML = "";
 
   for(const msg of bootMessages){
-    const line = document.createElement("div");
+
+    const line =
+      document.createElement("div");
+
     systemLog.appendChild(line);
 
     for(let dots = 1; dots <= 3; dots++){
-      line.innerHTML = msg + ".".repeat(dots) + '<span class="cursor">█</span>';
-      await wait(450);
+
+      line.innerHTML =
+        msg +
+        ".".repeat(dots) +
+        '<span class="cursor">█</span>';
+
+      await wait(420);
+
     }
 
     line.innerHTML = msg + "...";
-    await wait(350);
+
+    await wait(260);
+
   }
 
-  const finalLine = document.createElement("div");
-  finalLine.innerHTML = '<br>SECURITY STATUS: <span style="color:#ff3333;">ARMED</span>';
+  const finalLine =
+    document.createElement("div");
+
+  finalLine.innerHTML =
+    '<br>SECURITY STATUS: <span style="color:#ff3333;">ARMED</span>';
+
   systemLog.appendChild(finalLine);
+
 }
 
 function wait(ms){
-  return new Promise(resolve => setTimeout(resolve, ms));
+
+  return new Promise(resolve =>
+    setTimeout(resolve, ms)
+  );
+
 }
 
 function saveUnits(){
-  localStorage.setItem("containmentUnits", JSON.stringify(units));
+
+  localStorage.setItem(
+    "containmentUnits",
+    JSON.stringify(units)
+  );
+
 }
 
 function renderUnits(){
-  const container = document.getElementById("units");
+
+  const container =
+    document.getElementById("units");
+
   container.innerHTML = "";
 
   units.forEach((unit, unitIndex)=>{
+
     let itemsHTML = "";
 
     unit.items.forEach((item, itemIndex)=>{
+
       itemsHTML += `
+
         <div class="item">
+
           <span>${item}</span>
-          <button class="delete-btn" onclick="deleteItem(${unitIndex}, ${itemIndex})">REMOVE</button>
+
+          <button
+            class="delete-btn"
+            onclick="deleteItem(${unitIndex}, ${itemIndex})"
+          >
+            REMOVE
+          </button>
+
         </div>
+
       `;
+
     });
 
     container.innerHTML += `
+
       <div class="unit">
-        <h3>Unit ${unitIndex + 1} — ${unit.name}</h3>
+
+        <h3>
+          Unit ${unitIndex + 1}
+          — ${unit.name}
+        </h3>
+
         ${itemsHTML || "<p>No items contained.</p>"}
+
       </div>
+
     `;
+
   });
+
 }
 
 function addUnit(){
-  const name = document.getElementById("unitName").value.trim();
-  const rawItems = document.getElementById("unitItems").value.trim();
+
+  const name =
+    document.getElementById("unitName")
+    .value
+    .trim();
+
+  const rawItems =
+    document.getElementById("unitItems")
+    .value
+    .trim();
 
   if(!name || !rawItems){
+
     alert("Containment data incomplete.");
+
     return;
+
   }
 
   const items = rawItems
@@ -253,23 +388,38 @@ function addUnit(){
     .map(i => i.trim())
     .filter(i => i);
 
-  units.push({ name, items });
+  units.push({
+
+    name,
+    items
+
+  });
 
   saveUnits();
+
   renderUnits();
 
   document.getElementById("unitName").value = "";
   document.getElementById("unitItems").value = "";
+
 }
 
 function deleteItem(unitIndex, itemIndex){
-  units[unitIndex].items.splice(itemIndex,1);
+
+  units[unitIndex]
+    .items
+    .splice(itemIndex, 1);
+
   saveUnits();
+
   renderUnits();
+
 }
 
 bootSequence();
+
 renderUnits();
+
 </script>
 
 </body>
