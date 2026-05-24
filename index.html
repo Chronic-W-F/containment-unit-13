@@ -1,10 +1,293 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Containment Unit 13</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>Containment Unit 13</title>
+
+<style>
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  background:#050505;
+  color:white;
+  font-family:Arial,sans-serif;
+}
+
+header{
+  position:relative;
+}
+
+header img{
+  width:100%;
+  height:auto;
+  display:block;
+  border-bottom:3px solid #7a0000;
+  box-shadow:0 0 25px rgba(255,0,0,0.35);
+}
+
+.overlay{
+  position:absolute;
+  bottom:20px;
+  left:20px;
+  background:rgba(0,0,0,0.65);
+  padding:14px 18px;
+  border:1px solid #700;
+  box-shadow:0 0 12px rgba(255,0,0,0.35);
+}
+
+.overlay h1{
+  margin:0;
+  color:#ff2e2e;
+  font-size:2rem;
+  text-shadow:0 0 12px red;
+}
+
+.overlay p{
+  margin:6px 0 0;
+  color:#bbb;
+  font-size:.95rem;
+}
+
+.system-log{
+  background:#111;
+  color:#39ff14;
+  padding:12px;
+  font-family:monospace;
+  border-top:1px solid #222;
+  border-bottom:1px solid #222;
+}
+
+.main{
+  padding:20px;
+}
+
+.add-unit{
+  background:#111;
+  border:1px solid #333;
+  padding:20px;
+  margin-bottom:20px;
+  border-radius:10px;
+}
+
+.add-unit h2{
+  margin-top:0;
+  color:#ff3a3a;
+}
+
+input, textarea{
+  width:100%;
+  background:#1a1a1a;
+  color:white;
+  border:1px solid #444;
+  padding:12px;
+  margin-top:10px;
+  border-radius:6px;
+  font-size:1rem;
+}
+
+button{
+  margin-top:12px;
+  background:#8b0000;
+  color:white;
+  border:none;
+  padding:12px 18px;
+  font-size:1rem;
+  border-radius:6px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+button:hover{
+  background:#b30000;
+  transform:scale(1.02);
+}
+
+.unit{
+  background:#111;
+  border:1px solid #333;
+  margin-bottom:20px;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+.unit-header{
+  background:#1b1b1b;
+  padding:14px;
+  border-bottom:1px solid #333;
+}
+
+.unit-header h3{
+  margin:0;
+  color:#ff4040;
+}
+
+.unit-items{
+  padding:15px;
+}
+
+.item{
+  padding:10px;
+  margin-bottom:10px;
+  background:#1a1a1a;
+  border-left:4px solid #8b0000;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.delete-btn{
+  background:#400;
+  padding:6px 10px;
+  font-size:.8rem;
+}
+
+.footer-warning{
+  text-align:center;
+  padding:30px 15px;
+  color:#700;
+  font-size:.9rem;
+  letter-spacing:2px;
+}
+
+</style>
 </head>
 <body>
-  <h1>Containment Unit 13</h1>
-  <p>System boot initialized...</p>
+
+<header>
+
+<img src="/publicimages/containment-unit-13.png">
+
+<div class="overlay">
+<h1>Containment Unit 13</h1>
+<p>Unauthorized access will be terminated.</p>
+</div>
+
+</header>
+
+<div class="system-log">
+SYSTEM BOOT INITIALIZED...<br>
+CONTAINMENT PROTOCOLS ACTIVE...<br>
+SECURITY STATUS: STABLE
+</div>
+
+<div class="main">
+
+<div class="add-unit">
+
+<h2>Create New Unit</h2>
+
+<input type="text" id="unitName" placeholder="Custom Unit Name">
+
+<textarea id="unitItems" rows="6" placeholder="Enter items... one per line"></textarea>
+
+<button onclick="addUnit()">Create Containment Unit</button>
+
+</div>
+
+<div id="units"></div>
+
+</div>
+
+<div class="footer-warning">
+CONTAINMENT DATABASE ACTIVE
+</div>
+
+<script>
+
+let units = JSON.parse(localStorage.getItem("containmentUnits")) || [];
+
+function saveUnits(){
+  localStorage.setItem("containmentUnits", JSON.stringify(units));
+}
+
+function renderUnits(){
+
+  const container = document.getElementById("units");
+
+  container.innerHTML = "";
+
+  units.forEach((unit, unitIndex)=>{
+
+    let itemsHTML = "";
+
+    unit.items.forEach((item, itemIndex)=>{
+
+      itemsHTML += `
+        <div class="item">
+          <span>${item}</span>
+          <button class="delete-btn" onclick="deleteItem(${unitIndex}, ${itemIndex})">REMOVE</button>
+        </div>
+      `;
+
+    });
+
+    container.innerHTML += `
+      <div class="unit">
+
+        <div class="unit-header">
+          <h3>Unit ${unitIndex + 1} — ${unit.name}</h3>
+        </div>
+
+        <div class="unit-items">
+          ${itemsHTML}
+        </div>
+
+      </div>
+    `;
+
+  });
+
+}
+
+function addUnit(){
+
+  const name = document.getElementById("unitName").value.trim();
+
+  const rawItems = document.getElementById("unitItems").value.trim();
+
+  if(!name || !rawItems){
+    alert("Containment data incomplete.");
+    return;
+  }
+
+  const items = rawItems
+    .split("\n")
+    .map(i => i.trim())
+    .filter(i => i);
+
+  units.push({
+    name,
+    items
+  });
+
+  saveUnits();
+
+  renderUnits();
+
+  document.getElementById("unitName").value = "";
+  document.getElementById("unitItems").value = "";
+
+}
+
+function deleteItem(unitIndex, itemIndex){
+
+  units[unitIndex].items.splice(itemIndex,1);
+
+  saveUnits();
+
+  renderUnits();
+
+}
+
+renderUnits();
+
+</script>
+
 </body>
 </html>
