@@ -40,7 +40,9 @@ header img{
   border-bottom:1px solid #222;
   min-height:140px;
   line-height:1.55;
-  box-shadow:inset 0 0 25px rgba(57,255,20,.06),0 0 20px rgba(255,0,0,.08);
+  box-shadow:
+    inset 0 0 25px rgba(57,255,20,.06),
+    0 0 20px rgba(255,0,0,.08);
   font-size:1.05rem;
 }
 
@@ -57,22 +59,27 @@ header img{
   padding:22px;
 }
 
-.add-unit,.unit{
+.add-unit,
+.unit{
   background:#0b0b0b;
   border:1px solid #2a2a2a;
   border-radius:14px;
   padding:24px;
   margin-bottom:24px;
-  box-shadow:0 0 18px rgba(255,0,0,.08),inset 0 0 14px rgba(255,255,255,.02);
+  box-shadow:
+    0 0 18px rgba(255,0,0,.08),
+    inset 0 0 14px rgba(255,255,255,.02);
 }
 
-.add-unit h2,.unit h3{
+.add-unit h2,
+.unit h3{
   margin-top:0;
   color:#ff3a3a;
   text-shadow:0 0 8px rgba(255,0,0,.5);
 }
 
-input,textarea{
+input,
+textarea{
   width:100%;
   background:#151515;
   color:white;
@@ -87,7 +94,8 @@ textarea{
   resize:vertical;
 }
 
-input:focus,textarea:focus{
+input:focus,
+textarea:focus{
   outline:none;
   border-color:#a00000;
   box-shadow:0 0 10px rgba(255,0,0,.25);
@@ -110,7 +118,7 @@ button:hover{
   transform:scale(1.02);
 }
 
-.unit-actions,.item-buttons{
+.unit-actions{
   display:flex;
   flex-wrap:wrap;
   gap:8px;
@@ -136,10 +144,6 @@ button:hover{
   margin-bottom:12px;
   background:#141414;
   border-left:4px solid #8b0000;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
   border-radius:6px;
 }
 
@@ -285,32 +289,12 @@ function renderUnits(){
 
     let itemsHTML = "";
 
-    unit.items.forEach((item, itemIndex)=>{
+    unit.items.forEach((item)=>{
 
       itemsHTML += `
 
         <div class="item">
-
-          <span>${item}</span>
-
-          <div class="item-buttons">
-
-            <button
-              class="small-btn edit-btn"
-              onclick="editItem(${unitIndex}, ${itemIndex})"
-            >
-              EDIT
-            </button>
-
-            <button
-              class="small-btn delete-btn"
-              onclick="deleteItem(${unitIndex}, ${itemIndex})"
-            >
-              REMOVE
-            </button>
-
-          </div>
-
+          ${item}
         </div>
 
       `;
@@ -330,9 +314,9 @@ function renderUnits(){
 
           <button
             class="small-btn edit-btn"
-            onclick="editUnitName(${unitIndex})"
+            onclick="editUnit(${unitIndex})"
           >
-            EDIT UNIT
+            EDIT
           </button>
 
           <button
@@ -397,7 +381,7 @@ function addUnit(){
 
 }
 
-function editUnitName(unitIndex){
+function editUnit(unitIndex){
 
   const updatedName =
     prompt(
@@ -407,53 +391,22 @@ function editUnitName(unitIndex){
 
   if(updatedName === null) return;
 
-  if(updatedName.trim() === "") return;
+  const updatedItems =
+    prompt(
+      "Edit all items. One item per line:",
+      units[unitIndex].items.join("\n")
+    );
+
+  if(updatedItems === null) return;
 
   units[unitIndex].name =
     updatedName.trim();
 
-  saveUnits();
-
-  renderUnits();
-
-}
-
-function editItem(unitIndex, itemIndex){
-
-  const currentItem =
-    units[unitIndex].items[itemIndex];
-
-  const updatedItem =
-    prompt(
-      "Edit item:",
-      currentItem
-    );
-
-  if(updatedItem === null) return;
-
-  if(updatedItem.trim() === "") return;
-
-  units[unitIndex].items[itemIndex] =
-    updatedItem.trim();
-
-  saveUnits();
-
-  renderUnits();
-
-}
-
-function deleteItem(unitIndex, itemIndex){
-
-  const confirmDelete =
-    confirm(
-      "Remove this item from containment?"
-    );
-
-  if(!confirmDelete) return;
-
-  units[unitIndex]
-    .items
-    .splice(itemIndex, 1);
+  units[unitIndex].items =
+    updatedItems
+      .split("\n")
+      .map(i => i.trim())
+      .filter(i => i);
 
   saveUnits();
 
