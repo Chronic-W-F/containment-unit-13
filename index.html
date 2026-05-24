@@ -118,7 +118,8 @@ button:hover{
   transform:scale(1.02);
 }
 
-.unit-actions{
+.unit-actions,
+.item-buttons{
   display:flex;
   flex-wrap:wrap;
   gap:8px;
@@ -145,6 +146,14 @@ button:hover{
   background:#141414;
   border-left:4px solid #8b0000;
   border-radius:6px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+}
+
+.item span{
+  flex:1;
 }
 
 .empty{
@@ -289,12 +298,25 @@ function renderUnits(){
 
     let itemsHTML = "";
 
-    unit.items.forEach((item)=>{
+    unit.items.forEach((item, itemIndex)=>{
 
       itemsHTML += `
 
         <div class="item">
-          ${item}
+
+          <span>${item}</span>
+
+          <div class="item-buttons">
+
+            <button
+              class="small-btn edit-btn"
+              onclick="editItem(${unitIndex}, ${itemIndex})"
+            >
+              EDIT
+            </button>
+
+          </div>
+
         </div>
 
       `;
@@ -314,9 +336,9 @@ function renderUnits(){
 
           <button
             class="small-btn edit-btn"
-            onclick="editUnit(${unitIndex})"
+            onclick="editUnitName(${unitIndex})"
           >
-            EDIT
+            EDIT UNIT
           </button>
 
           <button
@@ -381,7 +403,7 @@ function addUnit(){
 
 }
 
-function editUnit(unitIndex){
+function editUnitName(unitIndex){
 
   const updatedName =
     prompt(
@@ -391,22 +413,34 @@ function editUnit(unitIndex){
 
   if(updatedName === null) return;
 
-  const updatedItems =
-    prompt(
-      "Edit all items. One item per line:",
-      units[unitIndex].items.join("\n")
-    );
-
-  if(updatedItems === null) return;
+  if(updatedName.trim() === "") return;
 
   units[unitIndex].name =
     updatedName.trim();
 
-  units[unitIndex].items =
-    updatedItems
-      .split("\n")
-      .map(i => i.trim())
-      .filter(i => i);
+  saveUnits();
+
+  renderUnits();
+
+}
+
+function editItem(unitIndex, itemIndex){
+
+  const currentItem =
+    units[unitIndex].items[itemIndex];
+
+  const updatedItem =
+    prompt(
+      "Edit item:",
+      currentItem
+    );
+
+  if(updatedItem === null) return;
+
+  if(updatedItem.trim() === "") return;
+
+  units[unitIndex].items[itemIndex] =
+    updatedItem.trim();
 
   saveUnits();
 
