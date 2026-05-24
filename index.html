@@ -19,7 +19,6 @@ body{
 }
 
 header{
-  position:relative;
   overflow:hidden;
 }
 
@@ -28,30 +27,6 @@ header img{
   display:block;
   border-bottom:3px solid #7a0000;
   box-shadow:0 0 25px rgba(255,0,0,.35);
-}
-
-.overlay{
-  position:absolute;
-  bottom:20px;
-  left:20px;
-  background:rgba(0,0,0,.72);
-  padding:14px 20px;
-  border:1px solid #700;
-  box-shadow:0 0 18px rgba(255,0,0,.4);
-  backdrop-filter:blur(2px);
-}
-
-.overlay h1{
-  margin:0;
-  color:#ff2e2e;
-  font-size:2rem;
-  text-shadow:0 0 14px red;
-}
-
-.overlay p{
-  margin:8px 0 0;
-  color:#bbb;
-  font-size:1rem;
 }
 
 .system-log{
@@ -167,25 +142,6 @@ button:hover{
   letter-spacing:4px;
 }
 
-@media(max-width:700px){
-
-  .overlay{
-    left:10px;
-    right:10px;
-    bottom:10px;
-    padding:12px;
-  }
-
-  .overlay h1{
-    font-size:1.7rem;
-  }
-
-  .overlay p{
-    font-size:.92rem;
-  }
-
-}
-
 </style>
 </head>
 
@@ -194,11 +150,6 @@ button:hover{
 <header>
 
 <img src="/publicimages/containment-unit-13.png" alt="Containment Unit 13 Banner">
-
-<div class="overlay">
-  <h1>Containment Unit 13</h1>
-  <p>Unauthorized access will be terminated.</p>
-</div>
 
 </header>
 
